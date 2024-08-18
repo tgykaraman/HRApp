@@ -3,5 +3,5 @@ from django.shortcuts import render,redirect
 
 # Create your views here.
 
-def index(request):
+def AddEmployee(request):
     return render(request,'hr_app/base.html')
