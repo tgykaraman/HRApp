@@ -1,6 +1,9 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
+
+#Kullanıcı Tablosu
 class employee(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(help_text="someone@kartek.com",unique=True)
@@ -16,6 +19,13 @@ class employee(models.Model):
     photo = models.ImageField(upload_to="employee_photos/")
     password = models.CharField(max_length=120)
 
+    #Şifre hashleme
+    def save(self,*args,**kwargs):
+        if self.pk is None:
+            self.password = make_password(self.password)
+        super().save(*args,**kwargs)
+
+    #Kullanıcının çıktısı
     def __str__(self):
         return self.name
 

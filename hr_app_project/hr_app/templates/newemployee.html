@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container fixed-top label" style="margin-left: 25%; margin-top: 6%; max-height: 80vh; overflow-y: auto;">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Kişisel Bilgiler -->
+    <fieldset>
+        <legend><h2>Kişisel Bilgiler</h2></legend>
+        <hr>
+        {{ form.photo.errors }}
+        <label for="{{ form.photo.id_for_label }}" style="font-weight: bold;font-size:18px;">Fotoğraf:</label>
+        <br><br>
+        {{ form.photo}}
+        <br><br>
+        {{ form.name.errors }}
+        <label for="{{ form.name.id_for_label }}">İsim:</label>
+        <br>
+        {{ form.name }}
+        <br><br>
+        {{ form.email.errors }}
+        <label for="{{ form.email.id_for_label }}">E-posta:</label>
+        <br>
+        {{ form.email }}
+        <br><br>
+        {{ form.phone.errors }}
+        <label for="{{ form.phone.id_for_label }}">Telefon:</label>
+        <br>
+        {{ form.phone }}
+        <br><br>
+        {{ form.address.errors }}
+        <label for="{{ form.address.id_for_label }}">Adres:</label>
+        <br>
+        {{ form.address }}
+        <br><br>
+        {{ form.education.errors }}
+        <label for="{{ form.education.id_for_label }}">Eğitim Durumu:</label>
+        <br>
+        {{ form.education }}
+        <br><br>
+        {{ form.birthdate.errors }}
+        <label for="{{ form.birthdate.id_for_label }}">Doğum Tarihi:</label>
+        <br>
+        {{ form.birthdate }}
+        <br><br>
+    </fieldset>
+    <br><br>
+    <!-- Şifre Bilgileri -->
+    <fieldset>
+        <legend> <h2>Şifre Bilgileri </h2></legend>
+        <hr>
+        {{ form.password.errors }}
+        <label for="{{ form.password.id_for_label }}">Şifre:</label>
+        <br>
+        {{ form.password }}
+        <br><br>
+        {{ form.password_confirm.errors }}
+        <label for="{{ form.password_confirm.id_for_label }}">Şifre Onayı:</label>
+        <br>
+        {{ form.password_confirm }}
+        <br><br>
+    </fieldset>
+    <br><br>
+    <!-- Şirket Bilgileri -->
+    <fieldset>
+        <legend><h2>Şirket Bilgileri </h2></legend>
+        <hr>
+        {{ form.position.errors }}
+        <label for="{{ form.position.id_for_label }}">Ünvan:</label>
+        <br>
+        {{ form.position }}
+        <br><br>
+        {{form.contract_type.errors}}
+        <label for="{{ form.contract_type.id_for_label }}">Sözleşme Türü:</label>
+        <br>
+        {{ form.contract_type}}
+        <br><br>
+        {{ form.hire_date.errors}}
+        <label for="{{ form.hire_date.id_for_label }}">İşe Giriş Tarihi:</label>
+        <br>
+        {{ form.hire_date}}
+        <br><br>
+        {{ form.salary.errors}}
+        <label for="{{ form.salary.id_for_label }}">Maaş:</label>
+        <br>
+        {{ form.salary}}
+        <br><br>
+        {{ form.department.errors}}
+        <label for="{{ form.department.id_for_label }}">Departman:</label>
+        <br>
+        {{ form.department}}
+        <br><br>
+    </fieldset>
+
+    <button class="btn btn-primary" type="submit">Kaydet</button>
+</form>
+</div>
+{% endblock %}
