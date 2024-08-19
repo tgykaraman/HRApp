@@ -18,6 +18,7 @@ class employee(models.Model):
     birthdate = models.DateField()
     photo = models.ImageField(upload_to="employee_photos/")
     password = models.CharField(max_length=120)
+    absence = models.DecimalField(max_digits=4,decimal_places=1)
 
     #Şifre hashleme
     def save(self,*args,**kwargs):
@@ -28,4 +29,6 @@ class employee(models.Model):
     #Kullanıcının çıktısı
     def __str__(self):
         return self.name
+    
+
 
