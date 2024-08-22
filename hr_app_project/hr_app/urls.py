@@ -7,7 +7,10 @@ app_name = "hr_app"
 
 urlpatterns = [
     path("", views.manageemployee,name="manageemployee"),
-    path("addemployee/",views.AddEmployee,name="addemployee")
+    path("addemployee/",views.AddEmployee,name="addemployee"),
+    path("edit_employee/<int:id>/",views.edit_employee,name="edit_employee"),
+    path("export/",views.export_employees_to_excel,name="export_excel_employee"),
+    path("deleteemployee/<int:id>",views.deleteemployee,name="deleteemployee")
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container fixed-top " style="max-height: 80vh; overflow-y: auto; margin-left: 20%; margin-top: 4%;">
+
+<nav class=" nav nav-pills navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="color: azure;
+padding: 10px;">
+    <a href="{% url 'hr_app:manageemployee' %}" class="nav-link active" aria-current="page"> Manage Employee</a>
+    <a href="" class="nav-link"> Request Time Off</a>  
+  </nav>
+
+  <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="padding: 10px; color: azure;">
+    <h1 style="margin-right: 48%;"> Manage Employees</h1>
+        <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="filterButton" style="margin-right:10px;">
+      Filters
+    </button>
+    <a class="btn btn-primary" href="{% url 'hr_app:addemployee' %}" role="button" style="margin-right: 10px;">Add Employees</a>
+    <a class="btn btn-primary" href="{% url 'hr_app:export_excel_employee' %}" role="button">Export</a>
+  </nav>
+
+<table class="table" id="employeeTable">
+    <thead>   
+      <tr>
+        <th scope="col">Employe Name</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Phone Number</th>
+        <th scope="col">Department</th>
+        <th scope="col">Contract Type</th>
+        <th scope="col">Hire Date</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+      <tr valign="middle">
+        <td> <img src='{{employee.photo.url}}' alt="Employee photo" align="middle" width="40px" height="40px"> 
+        {{employee.name}}        
+        </td>
+        <td>
+          {{employee.email}}
+        </td>
+        <td>
+            {{employee.phone}}
+        </td>
+        <td>
+            {{employee.department}}
+        </td>
+        <td>
+            {{employee.contract_type}}
+        </td>
+        <td>
+            {{employee.hire_date}}
+        </td>
+        <td>
+            <a class="btn btn-primary" href="{% url 'hr_app:edit_employee' employee.id %}" role="button">Edit</a>
+            <a class="btn btn-danger" href="{% url 'hr_app:deleteemployee' employee.id %}" role="button">Delete</a>
+        </td>
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Filters</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="filterButton2"></button>
+      </div>
+      <div class="modal-body">
+        <div id="filterArea" style="display: none;">
+          <input type="text" id="employeeNameFilter" placeholder="Employee Name"><br><br>
+          <input type="text" id="departmentFilter" placeholder="Department">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="applyFilter">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+document.getElementById('filterButton').addEventListener('click', function() {
+    var filterArea = document.getElementById('filterArea');
+    filterArea.style.display = filterArea.style.display === 'none' ? 'block' : 'none';
+});
+
+document.getElementById('filterButton2').addEventListener('click', function() {
+    var filterArea = document.getElementById('filterArea');
+    filterArea.style.display = 'none'
+});
+
+document.getElementById('applyFilter').addEventListener('click', function() {
+    var employeeNameFilter = document.getElementById('employeeNameFilter').value.toLowerCase();
+    var departmentFilter = document.getElementById('departmentFilter').value.toLowerCase();
+    var table = document.getElementById('employeeTable');
+    var rows = table.getElementsByTagName('tr');
+
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName('td');
+        var employeeName = cells[0].textContent.toLowerCase();
+        var department = cells[1].textContent.toLowerCase();
+
+        if (employeeName.includes(employeeNameFilter) && department.includes(departmentFilter)) {
+            rows[i].style.display = '';
+            filterArea.style.display = 'none'
+        } else {
+            rows[i].style.display = 'none';
+            filterArea.style.display = 'none'
+        }
+    }
+});
+
+
+</script>
+
+{% endblock %}

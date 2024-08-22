@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
-
+from datetime import date
 # Create your models here.
 
 #Kullanıcı Tablosu
-class employee(models.Model):
+class Employee(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(help_text="someone@kartek.com",unique=True)
     phone = models.CharField(max_length=15)
@@ -18,12 +18,15 @@ class employee(models.Model):
     birthdate = models.DateField()
     photo = models.ImageField(upload_to="employee_photos/")
     password = models.CharField(max_length=120)
-    absence = models.DecimalField(max_digits=4,decimal_places=1)
+    absence = models.DecimalField(max_digits=4,decimal_places=1,null=True)
 
     #Şifre hashleme
     def save(self,*args,**kwargs):
-        if self.pk is None:
-            self.password = make_password(self.password)
+        today = date.today()
+        employment_duration = today - self.hire_date
+        self.password = make_password(self.password)
+        if employment_duration.days >= 365:
+            self.absence = 14.0
         super().save(*args,**kwargs)
 
     #Kullanıcının çıktısı
