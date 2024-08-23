@@ -106,12 +106,10 @@ document.getElementById('applyFilter').addEventListener('click', function() {
         var employeeName = cells[0].textContent.toLowerCase();
         var department = cells[1].textContent.toLowerCase();
 
-        if (employeeName.includes(employeeNameFilter) && department.includes(departmentFilter)) {
+        if (employeeName.includes(employeeNameFilter) || department.includes(departmentFilter)) {
             rows[i].style.display = '';
-            filterArea.style.display = 'none'
         } else {
             rows[i].style.display = 'none';
-            filterArea.style.display = 'none'
         }
     }
 });
