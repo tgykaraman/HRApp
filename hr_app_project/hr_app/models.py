@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 from datetime import date
 # Create your models here.
 
-#Kullanıcı Tablosu
+#Çalışan Tablosu
 class Employee(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(help_text="someone@kartek.com",unique=True)
@@ -33,5 +33,31 @@ class Employee(models.Model):
     def __str__(self):
         return self.name
     
+class Recruitment(models.Model):
+    job_title = models.CharField(max_length=100)
+    job_type = models.CharField(max_length=100)
+    description = models.TextField()
+    requirements = models.TextField()
+    active_until = models.DateField()
+    department = models.CharField(max_length=100)
+    contract_type = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.job_title
+
+class Candidate(models.Model):
+    job_title = models.ForeignKey(Recruitment,on_delete=models.CASCADE, related_name="candidate")
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    source = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, default="Sourced")
+    CV = models.FileField(upload_to="cvs/")
+    phone = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.job_title
+
+
 
 

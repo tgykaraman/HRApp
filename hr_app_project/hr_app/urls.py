@@ -10,7 +10,10 @@ urlpatterns = [
     path("addemployee/",views.AddEmployee,name="addemployee"),
     path("edit_employee/<int:id>/",views.edit_employee,name="edit_employee"),
     path("export/",views.export_employees_to_excel,name="export_excel_employee"),
-    path("deleteemployee/<int:id>",views.deleteemployee,name="deleteemployee")
+    path("deleteemployee/<int:id>",views.deleteemployee,name="deleteemployee"),
+    path("tablefilter",views.tablefilter,name="tablefilter"),
+    path("addjob",views.AddJob, name="addjob"),
+    path("addcandidate",views.AddCandidate, name="addcandidate")
 ]
 
 if settings.DEBUG:

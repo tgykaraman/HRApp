@@ -5,61 +5,43 @@
 
 <nav class=" nav nav-pills navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="color: azure;
 padding: 10px;">
-    <a href="{% url 'hr_app:manageemployee' %}" class="nav-link active" aria-current="page"> Manage Employee</a>
-    <a href="" class="nav-link"> Request Time Off</a>  
+    <a href="{% url 'hr_app:manageemployee' %}" class="nav-link active" aria-current="page"> Open Jobs</a>
+    <a href="" class="nav-link"> Candidates</a>  
   </nav>
 
   <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="padding: 10px; color: azure;">
-    <h1 style="margin-right: 48%;"> Manage Employees</h1>
+    <h1 style="margin-right: 48%;"> Open Jobs</h1>
         <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-right:10px;">
       Filters
     </button>
-    <a class="btn btn-primary" href="{% url 'hr_app:addemployee' %}" role="button" style="margin-right: 10px;">Add Employees</a>
+    <a class="btn btn-primary" href="{% url 'hr_app:addemployee' %}" role="button" style="margin-right: 10px;">Add New Job</a>
     <a class="btn btn-primary" href="{% url 'hr_app:export_excel_employee' %}" role="button">Export</a>
   </nav>
 
-<table class="table">
-    <thead>   
-      <tr>
-        <th scope="col">Employe Name</th>
-        <th scope="col">E-mail</th>
-        <th scope="col">Phone Number</th>
-        <th scope="col">Department</th>
-        <th scope="col">Contract Type</th>
-        <th scope="col">Hire Date</th>
-        <th> </th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for employee in employees %}
-      <tr valign="middle">
-        <td> <img src='{{employee.photo.url}}' alt="Employee photo" align="middle" width="40px" height="40px"> 
-        {{employee.name}}        
-        </td>
-        <td>
-          {{employee.email}}
-        </td>
-        <td>
-            {{employee.phone}}
-        </td>
-        <td>
-            {{employee.department}}
-        </td>
-        <td>
-            {{employee.contract_type}}
-        </td>
-        <td>
-            {{employee.hire_date}}
-        </td>
-        <td>
-            <a class="btn btn-primary" href="{% url 'hr_app:edit_employee' employee.id %}" role="button">Edit</a>
-            <a class="btn btn-danger" href="{% url 'hr_app:deleteemployee' employee.id %}" role="button">Delete</a>
-        </td>
-      </tr>
+  <div class="container">
+    <div class="row row-cols-3">
+        {% for job in jobs  %}
+      <div class="col">
+
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title"> {{job.job_title}} </h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">Active Until: {{job.active_until}} </h6>
+              <p class="card-text">{{job.department}}</p>
+              <p class="card-text">{{job.contract_type}}</p>
+              <p class="card-text">{{job.location}}</p>
+              <a href="#" class="btn btn-primary" role="button">Details</a>
+              <a href="#" class="btn btn-primary" role="button">Edit</a>
+              <a href="#" class="btn btn-danger" role="button">Delete</a>
+            </div>
+          </div>
+
+      </div>
         {% endfor %}
-    </tbody>
-  </table>
+    </div>
+  </div>
+
 </div>
 
 <!-- Modal -->
