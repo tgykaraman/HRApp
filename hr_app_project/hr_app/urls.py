@@ -13,7 +13,9 @@ urlpatterns = [
     path("deleteemployee/<int:id>",views.deleteemployee,name="deleteemployee"),
     path("tablefilter",views.tablefilter,name="tablefilter"),
     path("addjob",views.AddJob, name="addjob"),
-    path("addcandidate",views.AddCandidate, name="addcandidate")
+    path("addcandidate",views.AddCandidate, name="addcandidate"),
+    path("jobs",views.jobview, name="jobs"),
+    path("candidates",views.candidateview, name="candidates")
 ]
 
 if settings.DEBUG:

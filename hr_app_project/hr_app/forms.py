@@ -1,5 +1,5 @@
 from typing import Any
-from django.forms import ModelForm
+from django.forms import ModelForm, ChoiceField
 from hr_app.models import Employee, Candidate, Recruitment
 from django import forms
 
@@ -27,23 +27,19 @@ class AddNewJob(ModelForm):
         fields = ["job_title","job_type","description","requirements","active_until",
                   "department","contract_type","location"]
         
-class AddNewCandidate(forms.Form):
-    job_title = forms.CharField(label="Job Title:", max_length=100)
+class AddNewCandidate(ModelForm):
     name = forms.CharField(label= "Candidate Name:", max_length=100)
     email = forms.EmailField(label="E-mail:")
     source = forms.ChoiceField(label= "Source:",choices=[("Linkedin","Linkedin"),("Kariyer.net","Kariyer.net"),("Other","Other")])
-    status = forms.ChoiceField(label="Status:",choices=[("Sourced","Sourced"),("In Progress","In Progress"),("Intwerview","Interview"),
+    status = forms.ChoiceField(label="Status:",choices=[("Sourced","Sourced"),("In Progress","In Progress"),("Interview","Interview"),
                                ("Hired","Hired"),("Rejected","Rejected")])
     phone = forms.CharField(label="Phone",max_length=100)
     CV = forms.FileField(label="CV:")
     
-    def clean(self):
-        cleaned_data = super().clean()
-        if len(cleaned_data["status"])>1:
-            raise forms.ValidationError("Please select only one option")
-        if len(cleaned_data["source"])>1:
-            raise forms.ValidationError("Please select only one option")
-        return cleaned_data
+    class Meta:
+        model = Candidate
+        fields = ["job_title", "name", "email", "status", "phone", "source", "CV"]
+    
     
     
 

@@ -94,17 +94,25 @@ def AddJob(request):
 
 def AddCandidate(request):
     if request.method == 'POST':
-        form_candidate = AddNewCandidate(request.POST, request.FILES)
-        if form_candidate.is_valid():
+        form= AddNewCandidate(request.POST, request.FILES)
+        if form.is_valid():
             print("Form is valid")
-            form_candidate.save()
+            form.save()
             messages.success(request, "Candidate added successfully!")
             return redirect("hr_app:addcandidate")
         else:
-            print("Form is not valid:", form_candidate.errors)  # Form hatalarını loglayın
+            print("Form is not valid:", form.errors)  # Form hatalarını loglayın
             messages.error(request, "Candidate couldn't be added. Please check the errors.")
     else:
-        form_candidate = AddNewCandidate()
+        form = AddNewCandidate()
     
     candidates = Candidate.objects.all()
-    return render(request, "newcandidate.html", {"form": form_candidate, "candidates": candidates})
+    return render(request, "newcandidate.html", {"form": form, "candidates": candidates})
+
+def jobview(request):
+    jobs = Recruitment.objects.all()
+    return render(request,"jobs.html",{"jobs":jobs})
+
+def candidateview(request):
+    candidates = Candidate.objects.all()
+    return render(request,"candidates.html",{"candidates":candidates})

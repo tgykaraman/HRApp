@@ -42,9 +42,14 @@
         {{ form.contract_type }}
         <br><br>
         {{ form.location.errors }}
-        <label for="{{ form.location.id_for_label }}">Birth Date:</label>
+        <label for="{{ form.location.id_for_label }}">Location:</label>
         <br>
         {{ form.location }}
+        <br><br>
+        {{ form.active_until.errors }}
+        <label for="{{ form.active_until.id_for_label }}">Active until:</label>
+        <br>
+        {{ form.active_until }}
         <br><br>
     </fieldset>
     <br><br>

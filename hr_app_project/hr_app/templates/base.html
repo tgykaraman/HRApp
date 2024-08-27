@@ -19,13 +19,13 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
           <li class="nav-item">
-            <a href="{% url 'hr_app:manageemployee' %}" class="nav-link active" aria-current="page">
+            <a href="{% url 'hr_app:manageemployee' %}" class="nav-link text-white" aria-current="page">
               <img src="{% static 'employees.png' %}" class="bi pe-none me-2" width="16" height="16"></img>
               Employee
             </a>
           </li>
           <li>
-            <a href="#" class="nav-link text-white">
+            <a href="{% url 'hr_app:jobs' %}" class="nav-link text-white">
               <img src="{% static 'recruitment.png' %}" class="bi pe-none me-2" width="16" height="16"></img>
               Recruitment
             </a>

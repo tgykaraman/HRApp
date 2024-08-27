@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container fixed-top " style="max-height: 80vh; overflow-y: auto; margin-left: 20%; margin-top: 4%;">
+
+<nav class=" nav nav-pills navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="color: azure;
+padding: 10px;">
+    <a href="{% url 'hr_app:jobs' %}" class="nav-link" > Open Jobs</a>
+    <a href="{% url 'hr_app:candidates' %}" class="nav-link active" aria-current="page"> Candidates</a>  
+  </nav>
+
+  <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="padding: 10px; color: azure;">
+    <h1 style="margin-right: 59%;"> Canditates</h1>
+        <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-right:10px;">
+      Filters
+    </button>
+    <a class="btn btn-primary" href="{% url 'hr_app:addcandidate' %}" role="button" style="margin-right: 10px;">Add New Candidate</a>
+    <a class="btn btn-primary" href="{% url 'hr_app:export_excel_employee' %}" role="button">Export</a>
+  </nav>
+
+  <table class="table">
+    <thead>   
+      <tr>
+        <th scope="col">Sourced</th>
+        <th scope="col">In Progress</th>
+        <th scope="col">Interview</th>
+        <th scope="col">Hired</th>
+        <th scope="col">Rejected</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for candidate in candidates %}
+      <tr valign="middle">
+        <td> 
+            {% if candidate.status == "Sourced" %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title"> {{candidate.job_title}} </h5>
+                    <hr>
+                    <p class="card-text"> <b>Name:</b> {{candidate.name}}</p>
+                    <p class="card-text"> <b>E-mail:</b> {{candidate.email}}</p>
+                    <p class="card-text"> <b>Source:</b> {{candidate.source}}</p>
+                    <hr>
+                    <a href="{{candidate.CV.url}}" class="btn btn-primary" role="button">CV</a>
+                    <a href="#" class="btn btn-primary" role="button">Edit</a>
+                    <a href="#" class="btn btn-danger" role="button">Delete</a>
+                    </div>
+                </div>
+            {% endif %}       
+        </td>
+        <td>
+            {% if candidate.status == "In Progress" %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title"> {{candidate.job_title}} </h5>
+                    <hr>
+                    <p class="card-text"> <b>Name:</b> {{candidate.name}}</p>
+                    <p class="card-text"> <b>E-mail:</b> {{candidate.email}}</p>
+                    <p class="card-text"> <b>Source:</b> {{candidate.source}}</p>
+                    <hr>
+                    <a href="{{candidate.CV.url}}" class="btn btn-primary" role="button">CV</a>
+                    <a href="#" class="btn btn-primary" role="button">Edit</a>
+                    <a href="#" class="btn btn-danger" role="button">Delete</a>
+                    </div>
+                </div>
+            {% endif %}   
+        </td>
+        <td>
+            {% if candidate.status == "Interview" %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title"> {{candidate.job_title}} </h5>
+                    <hr>
+                    <p class="card-text"> <b>Name:</b> {{candidate.name}}</p>
+                    <p class="card-text"> <b>E-mail:</b> {{candidate.email}}</p>
+                    <p class="card-text"> <b>Source:</b> {{candidate.source}}</p>
+                    <hr>
+                    <a href="{{candidate.CV.url}}" class="btn btn-primary" role="button">CV</a>
+                    <a href="#" class="btn btn-primary" role="button">Edit</a>
+                    <a href="#" class="btn btn-danger" role="button">Delete</a>
+                    </div>
+                </div>
+            {% endif %}   
+        </td>
+        <td>
+            {% if candidate.status == "Hired" %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title"> {{candidate.job_title}} </h5>
+                    <hr>
+                    <p class="card-text"> <b>Name:</b> {{candidate.name}}</p>
+                    <p class="card-text"> <b>E-mail:</b> {{candidate.email}}</p>
+                    <p class="card-text"> <b>Source:</b> {{candidate.source}}</p>
+                    <hr>
+                    <a href="{{candidate.CV.url}}" class="btn btn-primary" role="button">CV</a>
+                    <a href="#" class="btn btn-primary" role="button">Edit</a>
+                    <a href="#" class="btn btn-danger" role="button">Delete</a>
+                    </div>
+                </div>
+            {% endif %}   
+        </td>
+        <td>
+            {% if candidate.status == "Rejected" %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                    <h5 class="card-title"> {{candidate.job_title}} </h5>
+                    <hr>
+                    <p class="card-text"> <b>Name:</b> {{candidate.name}}</p>
+                    <p class="card-text"> <b>E-mail:</b> {{candidate.email}}</p>
+                    <p class="card-text"> <b>Source:</b> {{candidate.source}}</p>
+                    <hr>
+                    <a href="{{candidate.CV.url}}" class="btn btn-primary" role="button">CV</a>
+                    <a href="#" class="btn btn-primary" role="button">Edit</a>
+                    <a href="#" class="btn btn-danger" role="button">Delete</a>
+                    </div>
+                </div>
+            {% endif %}  
+        </td>
+      </tr>
+        {% endfor %}
+    </tbody>
+
+  </table>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Filters</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="filterButton2"></button>
+      </div>
+      <div class="modal-body">
+        <form method="get" action="{% url 'hr_app:tablefilter' %}">
+          <input type="text" placeholder="Employee Name" name="name" value="{{name_filter}}"><br><br>
+          <input type="text" placeholder="Department" name="department" value="{{department_filter}}"><br><br>
+          <button type="submit" class="btn btn-primary" >Apply Filters</button>
+          <a class="btn btn-secondary" href="{% url 'hr_app:manageemployee' %}" role="button">Clear Filters</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
