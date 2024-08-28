@@ -7,49 +7,44 @@
 <form method="post" enctype="multipart/form-data" action="" id="myForm">
     {% csrf_token %}
     
-    <!-- İş Detayları -->
+    <!-- Edit Candidate -->
     <fieldset>
-        <legend><h2>Add New Job</h2></legend>
+        <legend><h2>Edit Candidate</h2></legend>
         <hr>
         {{ form.job_title.errors }}
         <label for="{{ form.job_title.id_for_label }}" style="font-weight: bold;font-size:18px;">Job Title:</label>
         <br><br>
         {{ form.job_title}}
         <br><br>
-        {{ form.job_type.errors }}
-        <label for="{{ form.job_type.id_for_label }}">Job Type:</label>
+        {{ form.name.errors }}
+        <label for="{{ form.name.id_for_label }}">Candidate Name:</label>
         <br>
-        {{ form.job_type }}
+        {{ form.name }}
         <br><br>
-        {{ form.description.errors }}
-        <label for="{{ form.description.id_for_label }}">Description:</label>
+        {{ form.email.errors }}
+        <label for="{{ form.email.id_for_label }}">E-mail:</label>
         <br>
-        {{ form.description }}
+        {{ form.email }}
         <br><br>
-        {{ form.requirements.errors }}
-        <label for="{{ form.requirements.id_for_label }}">Requirements:</label>
+        {{ form.source.errors }}
+        <label for="{{ form.source.id_for_label }}">Source:</label>
         <br>
-        {{ form.requirements }}
+        {{ form.source }}
         <br><br>
-        {{ form.department.errors }}
-        <label for="{{ form.address.id_for_label }}">Department:</label>
+        {{ form.status.errors }}
+        <label for="{{ form.status.id_for_label }}">Status:</label>
         <br>
-        {{ form.department}}
+        {{ form.status}}
         <br><br>
-        {{ form.contract_type.errors }}
-        <label for="{{ form.contract_type.id_for_label }}">Contract Type:</label>
+        {{ form.phone.errors }}
+        <label for="{{ form.phone.id_for_label }}">Phone:</label>
         <br>
-        {{ form.contract_type }}
+        {{ form.phone }}
         <br><br>
-        {{ form.location.errors }}
-        <label for="{{ form.location.id_for_label }}">Location:</label>
+        {{ form.CV.errors }}
+        <label for="{{ form.CV.id_for_label }}">CV:</label>
         <br>
-        {{ form.location }}
-        <br><br>
-        {{ form.active_until.errors }}
-        <label for="{{ form.active_until.id_for_label }}">Active until:</label>
-        <br>
-        {{ form.active_until }}
+        {{ form.CV }}
         <br><br>
     </fieldset>
     <br><br>
@@ -81,11 +76,11 @@
   <div class="modal-dialog">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmationModalLabel">Confirm Job</h5>
+        <h5 class="modal-title" id="confirmationModalLabel">Confirm Edit</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure you want to add that job?
+        Are you sure you want to save your changes?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>

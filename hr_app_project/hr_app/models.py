@@ -47,17 +47,49 @@ class Recruitment(models.Model):
         return self.job_title
 
 class Candidate(models.Model):
+    STATUS_CHOICES = [
+        ('Sourced', 'Sourced'),
+        ('In Progress', 'In Progress'),
+        ('Interview', 'Interview'),
+        ('Hired', 'Hired'),
+        ('Rejected', 'Rejected'),
+    ]
     job_title = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     source = models.CharField(max_length=100)
-    status = models.CharField(max_length=100, default="Sourced")
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='Sourced')
     CV = models.FileField(upload_to="cvs/")
     phone = models.CharField(max_length=100)
 
     def __str__(self):
         return self.job_title
+    
+class Salary(models.Model):
+    STATUS_CHOICES = [
+        ("",""),
+        ("Pending","Pending"),
+        ("Paid", "Paid"),
+        ("Overdue", "Overdue")
+    ]
 
-
-
-
+    MONTH_CHOICES =[
+        ("",""),
+        ("January","January"),
+        ("February","February"),
+        ("March","March"),
+        ("April","April"),
+        ("May","May"),
+        ("June","June"),
+        ("July","July"),
+        ("Augusth","Augusth"),
+        ("September","September"),
+        ("October","October"),
+        ("November","November"),
+        ("December","December")
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="salaries")
+    month = models.CharField(max_length=100, choices=MONTH_CHOICES,null=True, blank=True)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=True, blank=True)
+    

@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .forms import AddNewEmployee, AddNewJob, AddNewCandidate
+from .forms import AddNewEmployee, AddNewJob, AddNewCandidate, EditSalary
 from django.urls import reverse 
-from .models import Employee, Recruitment, Candidate
+from .models import Employee, Recruitment, Candidate, Salary
 from django.contrib import messages
 import pandas as pd
 from django.http import HttpResponse
@@ -114,5 +114,125 @@ def jobview(request):
     return render(request,"jobs.html",{"jobs":jobs})
 
 def candidateview(request):
+    candidates_by_status = {
+        'Sourced': Candidate.objects.filter(status='Sourced'),
+        'In Progress': Candidate.objects.filter(status='In Progress'),
+        'Interview': Candidate.objects.filter(status='Interview'),
+        'Hired': Candidate.objects.filter(status='Hired'),
+        'Rejected': Candidate.objects.filter(status='Rejected'),
+    }
+    context = {
+        'candidates_by_status': candidates_by_status
+    }
+    return render(request,"candidates.html",context=context)
+
+def jobdetails(request,id):
+    job = Recruitment.objects.get(id=id)
+    requirements = [req.strip() for req in job.requirements.split(',')]
+    return render(request,"jobdetails.html",{"job":job, "requirements":requirements})
+
+def edit_job(request,id):
+    job = get_object_or_404(Recruitment,id=id)
+    if request.method == "POST":
+        form = AddNewJob(request.POST,instance=job)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Job edited successfully!")
+            jobs = Recruitment.objects.all()
+            return render(request,"jobs.html",{"jobs":jobs})
+        else:
+            messages.error(request,"Job couldn't be edited. Please check the errors.")
+    else:
+       form = AddNewJob(instance=job)
+    return render(request,"editjob.html",{"form":form})
+
+def deletejob(request,id):
+    job = Recruitment.objects.get(pk=id)
+    Recruitment.objects.filter(id=id).delete()
+    return redirect("hr_app:jobs")
+
+def edit_candidate(request,id):
+    candidate = get_object_or_404(Candidate,id=id)
+    if request.method == "POST":
+        form = AddNewCandidate(request.POST,instance=candidate)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Candidate edited successfully!")
+            return redirect("hr_app:candidates")
+        else:
+            messages.error(request,"Candidate couldn't be edited. Please check the errors.")
+    else:
+       form = AddNewCandidate(instance=candidate)
+    return render(request,"editcandidate.html",{"form":form})
+
+def deletecandidate(request,id):
+    candidate = Candidate.objects.get(pk=id)
+    Candidate.objects.filter(id=id).delete()
+    return redirect("hr_app:candidates")
+
+def jobfilter(request):
+    jobs = Recruitment.objects.all()
+    name_filter = request.GET.get("job_title")
+    department_filter = request.GET.get("department")
+
+    if name_filter:
+        jobs = jobs.filter(job_title__icontains=name_filter).all()
+    if department_filter:
+        jobs = jobs.filter(department__icontains=department_filter).all()
+    
+    context = {"jobs":jobs,
+               "name_filter": name_filter,
+               "department_filter": department_filter}
+    print(f"{name_filter} & {department_filter}")
+    return render(request,"jobs.html",context=context)
+
+def export_jobs_to_excel(request):
+    jobs = Recruitment.objects.all().values()
+    df = pd.DataFrame(jobs)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=jobs.xlsx'
+    df.to_excel(response, index=False)
+    return response
+
+def candidatefilter(request):
     candidates = Candidate.objects.all()
-    return render(request,"candidates.html",{"candidates":candidates})
+    name_filter = request.GET.get("name")
+    job_filter = request.GET.get("job_title")
+    status_filter = request.GET.get("status")
+    if status_filter:
+        candidates = candidates.filter(status=status_filter).all()
+        if name_filter:
+            candidates = candidates.filter(name__icontains=name_filter).all()
+        if job_filter:
+            candidates = candidates.filter(job_title__icontains=job_filter).all()
+    else:
+        messages.error("Please select a status!")
+    context = {"candidates":candidates,
+               "name_filter": name_filter,
+               "job_filter": job_filter,
+               }
+    print(f"{name_filter} & {job_filter}")
+    return render(request,"candidates.html",context=context)
+
+def export_candidates_to_excel(request):
+    candidates = Candidate.objects.all().values()
+    df = pd.DataFrame(candidates)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=candidates.xlsx'
+    df.to_excel(response, index=False)
+    return response
+
+def edit_salaries(request,id):
+    employee = get_object_or_404(Employee,id=id)
+    if request == "POST":
+        form = EditSalary(request.POST)
+        if form.is_valid:
+            print("Form is valid")
+            salary = form.save(commit="FALSE")
+            salary.employee = employee
+            salary.save()
+        else:
+            print(form.errors)
+            form=EditSalary()
+        return redirect("hr_app:edit_salary")
+

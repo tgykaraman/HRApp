@@ -1,6 +1,6 @@
 from typing import Any
 from django.forms import ModelForm, ChoiceField
-from hr_app.models import Employee, Candidate, Recruitment
+from hr_app.models import Employee, Candidate, Recruitment, Salary
 from django import forms
 
 class AddNewEmployee(ModelForm):
@@ -28,19 +28,24 @@ class AddNewJob(ModelForm):
                   "department","contract_type","location"]
         
 class AddNewCandidate(ModelForm):
-    name = forms.CharField(label= "Candidate Name:", max_length=100)
+    name = forms.CharField(label="Candidate Name:", max_length=100)
     email = forms.EmailField(label="E-mail:")
-    source = forms.ChoiceField(label= "Source:",choices=[("Linkedin","Linkedin"),("Kariyer.net","Kariyer.net"),("Other","Other")])
-    status = forms.ChoiceField(label="Status:",choices=[("Sourced","Sourced"),("In Progress","In Progress"),("Interview","Interview"),
-                               ("Hired","Hired"),("Rejected","Rejected")])
-    phone = forms.CharField(label="Phone",max_length=100)
+    source = forms.ChoiceField(label="Source:", choices=[("Linkedin", "Linkedin"), ("Kariyer.net", "Kariyer.net"), ("Other", "Other")])
+    status = forms.ChoiceField(label="Status:", choices=Candidate.STATUS_CHOICES)
+    phone = forms.CharField(label="Phone", max_length=100)
     CV = forms.FileField(label="CV:")
-    
+    job_title = forms.CharField(label="Job Title:", max_length=100)
+
     class Meta:
         model = Candidate
         fields = ["job_title", "name", "email", "status", "phone", "source", "CV"]
     
-    
+class EditSalary(ModelForm):
+    month = forms.ChoiceField(choices=Salary.MONTH_CHOICES)
+    status = forms.ChoiceField(choices=Salary.STATUS_CHOICES)
+
+    class Meta:
+        fileds = ["month","status"]
     
 
 

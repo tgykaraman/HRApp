@@ -15,7 +15,16 @@ urlpatterns = [
     path("addjob",views.AddJob, name="addjob"),
     path("addcandidate",views.AddCandidate, name="addcandidate"),
     path("jobs",views.jobview, name="jobs"),
-    path("candidates",views.candidateview, name="candidates")
+    path("candidates",views.candidateview, name="candidates"),
+    path("jobdetails/<int:id>",views.jobdetails, name="jobdetails"),
+    path("edit_job/<int:id>/",views.edit_job,name="edit_job"),
+    path("deletejob/<int:id>",views.deletejob,name="deletejob"),
+    path("edit_candidate/<int:id>/",views.edit_candidate,name="edit_candidate"),
+    path("deletecandidate/<int:id>",views.deletecandidate,name="deletecandidate"),
+    path("jobfilter",views.jobfilter,name="jobfilter"),
+    path("exportjob/",views.export_jobs_to_excel,name="export_excel_job"),
+     path("candidatefilter",views.candidatefilter,name="candidatefilter"),
+    path("exportcandidate/",views.export_candidates_to_excel,name="export_excel_candidate")
 ]
 
 if settings.DEBUG:

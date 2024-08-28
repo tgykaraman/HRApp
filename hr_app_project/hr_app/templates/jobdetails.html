@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container fixed-top label" style="margin-left: 25%; margin-top: 6%; max-height: 80vh; overflow-y: auto; color: azure;">    
+    <!-- Job Details -->
+    
+        <h2>{{job.job_title}}</h2>
+        <hr>
+        <p> 
+            <b style="color: lightcoral;">Active Until:</b> 
+            {{job.active_until}}
+        </p>
+        <p> 
+            <b style="color: lightcoral;">Location:</b> 
+            {{job.location}}
+        </p>
+        <hr>
+        <b style="color: lightcoral;"> Job Description:</b>
+        <br>
+        <p >{{job.description}} </p> 
+        <b style="color: lightcoral;"> Requirements:</b>
+        <br>
+        <ul>
+        {% for requirement in requirements %}
+        <li>             
+            {{requirement}} 
+        </li>
+        {% endfor %}
+        </ul>
+</div>
+
+{% endblock %}
