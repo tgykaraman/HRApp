@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .forms import AddNewEmployee, AddNewJob, AddNewCandidate, EditSalary
+from .forms import AddNewEmployee, AddNewJob, AddNewCandidate, SalaryForm, EmployeeForm
 from django.urls import reverse 
 from .models import Employee, Recruitment, Candidate, Salary
 from django.contrib import messages
@@ -194,26 +194,6 @@ def export_jobs_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
-def candidatefilter(request):
-    candidates = Candidate.objects.all()
-    name_filter = request.GET.get("name")
-    job_filter = request.GET.get("job_title")
-    status_filter = request.GET.get("status")
-    if status_filter:
-        candidates = candidates.filter(status=status_filter).all()
-        if name_filter:
-            candidates = candidates.filter(name__icontains=name_filter).all()
-        if job_filter:
-            candidates = candidates.filter(job_title__icontains=job_filter).all()
-    else:
-        messages.error("Please select a status!")
-    context = {"candidates":candidates,
-               "name_filter": name_filter,
-               "job_filter": job_filter,
-               }
-    print(f"{name_filter} & {job_filter}")
-    return render(request,"candidates.html",context=context)
-
 def export_candidates_to_excel(request):
     candidates = Candidate.objects.all().values()
     df = pd.DataFrame(candidates)
@@ -222,17 +202,27 @@ def export_candidates_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
-def edit_salaries(request,id):
+def update_salary(request,id):
     employee = get_object_or_404(Employee,id=id)
-    if request == "POST":
-        form = EditSalary(request.POST)
-        if form.is_valid:
-            print("Form is valid")
-            salary = form.save(commit="FALSE")
+    if request.method == "POST":
+        employee_form = EmployeeForm(request.POST, instance=employee)
+        salary_form = SalaryForm(request.POST)
+        if employee_form.is_valid() and salary_form.is_valid():
+            employee_form.save()
+            salary = salary_form.save(commit=False)
             salary.employee = employee
             salary.save()
-        else:
-            print(form.errors)
-            form=EditSalary()
-        return redirect("hr_app:edit_salary")
+            return redirect("hr_app:payrollview")
+    else:
+        employee_form = EmployeeForm(instance=employee)
+        salary_form = SalaryForm()
+    context = {
+        "employee_form": employee_form,
+        "salary_form": salary_form
+    }
+    return render(request,"updatesalary.html",context)
 
+def payrollview(request):
+    employees = Employee.objects.all()
+    salaries = Salary.objects.all()
+    return render(request,"payroll.html",{"employees":employees, "salaries":salaries})

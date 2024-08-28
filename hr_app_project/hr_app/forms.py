@@ -40,12 +40,20 @@ class AddNewCandidate(ModelForm):
         model = Candidate
         fields = ["job_title", "name", "email", "status", "phone", "source", "CV"]
     
-class EditSalary(ModelForm):
+class SalaryForm(ModelForm):
     month = forms.ChoiceField(choices=Salary.MONTH_CHOICES)
     status = forms.ChoiceField(choices=Salary.STATUS_CHOICES)
 
     class Meta:
-        fileds = ["month","status"]
+        model = Salary
+        fields = ["month","status"]
+
+class EmployeeForm(ModelForm):
+    class Meta:
+        model = Employee
+        fields = ["salary"]
+
+
     
 
 

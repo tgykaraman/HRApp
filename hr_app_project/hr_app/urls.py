@@ -23,8 +23,9 @@ urlpatterns = [
     path("deletecandidate/<int:id>",views.deletecandidate,name="deletecandidate"),
     path("jobfilter",views.jobfilter,name="jobfilter"),
     path("exportjob/",views.export_jobs_to_excel,name="export_excel_job"),
-     path("candidatefilter",views.candidatefilter,name="candidatefilter"),
-    path("exportcandidate/",views.export_candidates_to_excel,name="export_excel_candidate")
+    path("exportcandidate/",views.export_candidates_to_excel,name="export_excel_candidate"),
+    path("payrollview/",views.payrollview,name="payrollview"),
+    path("update_salary/<int:id>",views.update_salary,name="update_salary")
 ]
 
 if settings.DEBUG:

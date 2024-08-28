@@ -91,5 +91,7 @@ class Salary(models.Model):
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="salaries")
     month = models.CharField(max_length=100, choices=MONTH_CHOICES,null=True, blank=True)
-    status = models.CharField(max_length=100, choices=STATUS_CHOICES, null=True, blank=True)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES,default="Pending")
+
+    
     
