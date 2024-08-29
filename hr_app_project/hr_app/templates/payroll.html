@@ -8,26 +8,27 @@ padding: 10px;">
   </nav>
 
   <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="padding: 10px; color: azure;">
-    <h1 style="margin-right: 67%;"> Payroll</h1>
+    <h1 style="margin-right: auto;"> Payroll</h1>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
       style="margin-right:10px;">
       Filters
     </button>
-    <a class="btn btn-primary" href="" role="button">Export</a>
+    <a class="btn btn-primary" href="{% url 'hr_app:export_excel_payroll'%}" role="button">Export</a>
   </nav>
 
   <div class="container" style="margin-top: 10px; overflow-y: auto;">
-    <div class="accordion bg-dark" id="accordionExample">
+    <div class="accordion-dark" id="accordionExample" style="color: azure;">
       {% for employee in employees %}
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                aria-expanded="true" aria-controls="collapseOne">
+          <div class="accordion-dark-item">
+            <h2 class="accordion-header-dark">
+              <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{employee.id}}"
+                aria-expanded="true" aria-controls="collapse{{employee.id}}" style="font-size: x-large;">
                 {{employee.name}}
               </button>
+              <a class="btn btn-primary" href="{% url 'hr_app:add_salary' employee.id %}" role="button" style="margin: 10px;">Add Payroll</a>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+            <div id="collapse{{employee.id}}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                 <table class="table">
                   <thead>
@@ -45,9 +46,8 @@ padding: 10px;">
                               <td> {{employee.salary}} </td>
                               <td> {{salary.status}} </td>
                               <td> 
-                                <a class="btn btn-primary" href="{% url 'hr_app:update_salary' employee.id %}" role="button">Add</a>
-                                <a class="btn btn-primary" href="{% url 'hr_app:update_salary' employee.id %}" role="button">Edit</a>
-                                <a class="btn btn-danger" href="{% url 'hr_app:update_salary' employee.id %}" role="button">Delete</a>
+                                <a class="btn btn-primary" href="{% url 'hr_app:update_salary' employee_id=employee.id salary_id=salary.id%}" role="button">Edit</a>
+                                <a class="btn btn-danger" href="{% url 'hr_app:delete_salary' salary.id %}" role="button">Delete</a>
                               </td>
                           </tr>
                         {% endfor %}
@@ -59,6 +59,7 @@ padding: 10px;">
       {% endfor %}
     </div>
   </div>
+</div>
 
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -70,11 +71,10 @@ padding: 10px;">
             id="filterButton2"></button>
         </div>
         <div class="modal-body">
-          <form method="get" action="{% url 'hr_app:jobfilter' %}">
-            <input type="text" placeholder="Job Title" name="job_title" value="{{name_filter}}"><br><br>
-            <input type="text" placeholder="Department" name="department" value="{{department_filter}}"><br><br>
+          <form method="get" action="{% url 'hr_app:payrollfilter' %}">
+            <input type="text" placeholder="Employee Name" name="name" value="{{name_filter}}"><br><br>
             <button type="submit" class="btn btn-primary">Apply Filters</button>
-            <a class="btn btn-secondary" href="{% url 'hr_app:jobs' %}" role="button">Clear Filters</a>
+            <a class="btn btn-secondary" href="{% url 'hr_app:payrollview' %}" role="button">Clear Filters</a>
           </form>
         </div>
       </div>

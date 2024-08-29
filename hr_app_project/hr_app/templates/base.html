@@ -12,7 +12,7 @@
 </head>
 <body class="bg-dark">
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 20%; height: 100%;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <a href="{% url 'hr_app:manageemployee' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
           <img src="{% static 'Kartek logo.png' %}" alt="Kartek logo" width="40px" height="32px" style="margin-right: 5px;">
           <span class="fs-4">HR App</span>
         </a>
@@ -31,7 +31,7 @@
             </a>
           </li>
           <li>
-            <a href="#" class="nav-link text-white">
+            <a href="{% url 'hr_app:payrollview' %}" class="nav-link text-white">
               <img src="{% static 'salary.png' %}" class="bi pe-none me-2" width="16" height="16"></img>
               Payroll
             </a>

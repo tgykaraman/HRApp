@@ -202,7 +202,7 @@ def export_candidates_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
-def update_salary(request,id):
+def add_salary(request,id):
     employee = get_object_or_404(Employee,id=id)
     if request.method == "POST":
         employee_form = EmployeeForm(request.POST, instance=employee)
@@ -226,3 +226,51 @@ def payrollview(request):
     employees = Employee.objects.all()
     salaries = Salary.objects.all()
     return render(request,"payroll.html",{"employees":employees, "salaries":salaries})
+
+def update_salary(request,employee_id, salary_id):
+    employee = get_object_or_404(Employee,id=employee_id)
+    salary = get_object_or_404(Salary,id=salary_id)
+    if request.method == "POST":
+        employee_form = EmployeeForm(request.POST, instance=employee)
+        salary_form = SalaryForm(request.POST, instance=salary)
+        if employee_form.is_valid() and salary_form.is_valid():
+            employee_form.save()
+            salary = salary_form.save(commit=False)
+            salary.employee = employee
+            salary.save()
+            return redirect("hr_app:payrollview")
+    else:
+        employee_form = EmployeeForm(instance=employee)
+        salary_form = SalaryForm(instance=salary)
+    context = {
+        "employee_form": employee_form,
+        "salary_form": salary_form
+    }
+    return render(request,"editsalary.html",context)
+
+def delete_salary(request,id):
+    salary = Salary.objects.get(pk=id)
+    Salary.objects.filter(id=id).delete()
+    return redirect("hr_app:payrollview")  
+
+def payrollfilter(request):
+    employees = Employee.objects.all()
+    salaries = Salary.objects.all()
+    name_filter = request.GET.get("name")
+
+    if name_filter:
+        employees = employees.filter(name__icontains=name_filter).all()
+    
+    context = {"employees":employees,
+               "salaries":salaries,
+               "name_filter": name_filter}
+    print(f"{name_filter}")
+    return render(request,"payroll.html",context=context)
+
+def export_payroll_to_excel(request):
+    salaries = Salary.objects.all().values()
+    df = pd.DataFrame(salaries)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=payroll.xlsx'
+    df.to_excel(response, index=False)
+    return response

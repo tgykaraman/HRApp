@@ -7,9 +7,9 @@
 <form method="post" enctype="multipart/form-data" action="" id="myForm">
     {% csrf_token %}
     
-    <!-- Add Salary -->
+    <!-- Edit Salary -->
     <fieldset>
-        <legend><h2>Add Payroll</h2></legend>
+        <legend><h2>Edit Payroll</h2></legend>
         <hr>
         {{ employee_form.salary.errors }}
         <label for="{{ employee_form.salary.id_for_label }}" style="font-weight: bold;font-size:18px;">Salary:</label>
@@ -41,7 +41,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure you want to add that payroll?
+        Are you sure you want to save your changes?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>

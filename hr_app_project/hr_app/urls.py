@@ -25,7 +25,11 @@ urlpatterns = [
     path("exportjob/",views.export_jobs_to_excel,name="export_excel_job"),
     path("exportcandidate/",views.export_candidates_to_excel,name="export_excel_candidate"),
     path("payrollview/",views.payrollview,name="payrollview"),
-    path("update_salary/<int:id>",views.update_salary,name="update_salary")
+    path("add_salary/<int:id>",views.add_salary,name="add_salary"),
+    path("update_salary/<int:employee_id>/<int:salary_id>",views.update_salary,name="update_salary"),
+    path("delete_salary/<int:id>",views.delete_salary,name="delete_salary"),
+    path("payrollfilter",views.payrollfilter,name="payrollfilter"),
+    path("exportpayroll/",views.export_payroll_to_excel,name="export_excel_payroll")
 ]
 
 if settings.DEBUG:
