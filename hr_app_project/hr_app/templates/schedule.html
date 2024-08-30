@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="container fixed-top" style="max-height: 80vh; overflow-y: auto; margin-left: 20%; margin-top: 4%; width: auto;">
+
+<nav class=" nav nav-pills navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="color: azure;
+padding: 10px;">
+  </nav>
+
+  <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="padding: 10px; color: azure;">
+    <h1 style="margin-right: 63%;"> Schedule</h1>
+  </nav>
+
+  <div class="container bg-light" style="margin-top: 10px; overflow-y: auto; color: black;">
+    <div class="row">
+        <div class="col-md-12">
+            <div id='calendar'></div>
+        </div>  
+    </div>
+  </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: '/hr_app/all_events',
+            selectable: true,
+            selectHelper: true,
+            editable: true,
+            eventLimit: true,
+            select: function (start, end, allDay) {
+                var title = prompt("Enter Event Title");
+                if (title) {
+                    var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                    var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+                    $.ajax({
+                        type: "GET",
+                        url: '/hr_app/add_event',
+                        data: {'title': title, 'start': start, 'end': end},
+                        dataType: "json",
+                        success: function (data) {
+                            calendar.fullCalendar('refetchEvents');
+                            alert("Added Successfully");
+                        },
+                        error: function (data) {
+                            alert('There is a problem!!!');
+                        }
+                    });
+                }
+            },
+            eventResize: function (event) {
+                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                var title = event.title;
+                var id = event.id;
+                $.ajax({
+                    type: "GET",
+                    url: '/hr_app/update',
+                    data: {'title': title, 'start': start, 'end': end, 'id': id},
+                    dataType: "json",
+                    success: function (data) {
+                        calendar.fullCalendar('refetchEvents');
+                        alert('Event Update');
+                    },
+                    error: function (data) {
+                        alert('There is a problem!!!');
+                    }
+                });
+            },
+  
+            eventDrop: function (event) {
+                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+                var title = event.title;
+                var id = event.id;
+                $.ajax({
+                    type: "GET",
+                    url: '/hr_app/update',
+                    data: {'title': title, 'start': start, 'end': end, 'id': id},
+                    dataType: "json",
+                    success: function (data) {
+                        calendar.fullCalendar('refetchEvents');
+                        alert('Event Update');
+                    },
+                    error: function (data) {
+                        alert('There is a problem!!!');
+                    }
+                });
+            },
+  
+            eventClick: function (event) {
+                if (confirm("Are you sure you want to remove it?")) {
+                    var id = event.id;
+                    $.ajax({
+                        type: "GET",
+                        url: '/hr_app/remove',
+                        data: {'id': id},
+                        dataType: "json",
+                        success: function (data) {
+                            calendar.fullCalendar('refetchEvents');
+                            alert('Event Removed');
+                        },
+                        error: function (data) {
+                            alert('There is a problem!!!');
+                        }
+                    });
+                }
+            },
+  
+        });
+    });
+  
+ </script>
+
+{% endblock %}

@@ -93,5 +93,14 @@ class Salary(models.Model):
     month = models.CharField(max_length=100, choices=MONTH_CHOICES,null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES,default="Pending")
 
-    
+class Events(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255,null=True,blank=True)
+    start = models.DateTimeField(null=True,blank=True)
+    end = models.DateTimeField(null=True,blank=True)
+ 
+    class Meta:  
+        db_table = "tblevents"
+
+
     

@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .forms import AddNewEmployee, AddNewJob, AddNewCandidate, SalaryForm, EmployeeForm
 from django.urls import reverse 
-from .models import Employee, Recruitment, Candidate, Salary
+from .models import Employee, Recruitment, Candidate, Salary, Events
 from django.contrib import messages
 import pandas as pd
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 
@@ -274,3 +274,53 @@ def export_payroll_to_excel(request):
     response['Content-Disposition'] = 'attachment; filename=payroll.xlsx'
     df.to_excel(response, index=False)
     return response
+
+def schedule(request):  
+    all_events = Events.objects.all()
+    context = {
+        "events":all_events,
+    }
+    return render(request,'schedule.html',context)
+
+def all_events(request):                                                                                                 
+    all_events = Events.objects.all()                                                                                    
+    out = []                                                                                                             
+    for event in all_events:                                                                                             
+        out.append({                                                                                                     
+            'title': event.name,                                                                                         
+            'id': event.id,                                                                                              
+            'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),                                                         
+            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),                                                             
+        })
+    return JsonResponse(out, safe=False) 
+
+def add_event(request):
+    start = request.GET.get("start", None)
+    end = request.GET.get("end", None)
+    title = request.GET.get("title", None)
+    event = Events(name=str(title), start=start, end=end)
+    event.save()
+    data = {}
+    return JsonResponse(data)
+
+def update(request):
+    start = request.GET.get("start", None)
+    end = request.GET.get("end", None)
+    title = request.GET.get("title", None)
+    id = request.GET.get("id", None)
+    event = Events.objects.get(id=id)
+    event.start = start
+    event.end = end
+    event.name = title
+    event.save()
+    data = {}
+    return JsonResponse(data)
+
+def remove(request):
+    id = request.GET.get("id", None)
+    event = Events.objects.get(id=id)
+    event.delete()
+    data = {}
+    return JsonResponse(data)                                                                                                               
+                                          
+

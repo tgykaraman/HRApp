@@ -29,7 +29,12 @@ urlpatterns = [
     path("update_salary/<int:employee_id>/<int:salary_id>",views.update_salary,name="update_salary"),
     path("delete_salary/<int:id>",views.delete_salary,name="delete_salary"),
     path("payrollfilter",views.payrollfilter,name="payrollfilter"),
-    path("exportpayroll/",views.export_payroll_to_excel,name="export_excel_payroll")
+    path("exportpayroll/",views.export_payroll_to_excel,name="export_excel_payroll"),
+    path('schedule/', views.schedule, name='schedule'), 
+    path('all_events/', views.all_events, name='all_events'), 
+    path('add_event/', views.add_event, name='add_event'), 
+    path('update/', views.update, name='update'),
+    path('remove/', views.remove, name='remove'),
 ]
 
 if settings.DEBUG:
