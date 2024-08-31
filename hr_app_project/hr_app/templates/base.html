@@ -53,9 +53,13 @@
             <strong>HR Admin</strong>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
+            <li>
+              <form method="POST" action="{% url 'hr_app:logout'%}?next=/login">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item">Sign out</button>
+              </form>
+            </li>
           </ul>
         </div>
       </div>

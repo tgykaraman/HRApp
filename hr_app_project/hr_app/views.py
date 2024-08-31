@@ -5,6 +5,8 @@ from .models import Employee, Recruitment, Candidate, Salary, Events
 from django.contrib import messages
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -323,4 +325,36 @@ def remove(request):
     data = {}
     return JsonResponse(data)                                                                                                               
                                           
+def login_employee(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        try:
+            user = User.objects.get(email=email)
+            user = authenticate(request, username=user.username, password=password)
+            if user is not None:
+                login(request, user)
+                if user.email == 'hradmin@kartek.com.tr':  # HR Admin e-posta adresini kontrol edin
+                    return redirect('hr_app:manageemployee')  # HR Admin için yönlendirme
+                else:
+                    return redirect('hr_app:homeemployee')  # Diğer kullanıcılar için yönlendirme
+            else:
+                return render(request, 'registration/login.html', {'error': 'Invalid email or password'})
+        except User.DoesNotExist:
+            return render(request, 'registration/login.html', {'error': 'User does not exist'})
+    return render(request, 'registration/login.html')
+
+def homeemployee(request):
+    employee = Employee.objects.get(email=request.user.email)
+    return render(request,"homeemployee.html",{"employee":employee})
+
+def payrollemployee(request):
+    employee = Employee.objects.get(email=request.user.email)
+    salaries = Salary.objects.filter(employee=employee.id)
+    return render(request,"payrollemployee.html",{"employee":employee, "salaries":salaries})
+
+    
+
+
+
 

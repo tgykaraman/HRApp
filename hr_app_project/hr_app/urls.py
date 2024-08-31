@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 app_name = "hr_app"
 
@@ -35,6 +36,10 @@ urlpatterns = [
     path('add_event/', views.add_event, name='add_event'), 
     path('update/', views.update, name='update'),
     path('remove/', views.remove, name='remove'),
+    path('homeemployee/', views.homeemployee, name="homeemployee"),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('login/', views.login_employee, name='login'),
+    path('payrollemployee/', views.payrollemployee, name="payrollemployee"),
 ]
 
 if settings.DEBUG:

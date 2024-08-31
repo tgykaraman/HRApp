@@ -1,10 +1,13 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from datetime import date
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import User
 # Create your models here.
 
 #Çalışa Tablosu
 class Employee(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True, blank=True)
     name = models.CharField(max_length=100)
     email = models.EmailField(help_text="someone@kartek.com",unique=True)
     phone = models.CharField(max_length=15)
@@ -19,19 +22,21 @@ class Employee(models.Model):
     photo = models.ImageField(upload_to="employee_photos/")
     password = models.CharField(max_length=120)
     absence = models.DecimalField(max_digits=4,decimal_places=1,null=True)
-
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
+    
     #Şifre hashleme
-    def save(self,*args,**kwargs):
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.password = make_password(self.password)
         today = date.today()
         employment_duration = today - self.hire_date
-        self.password = make_password(self.password)
         if employment_duration.days >= 365:
             self.absence = 14.0
-        super().save(*args,**kwargs)
-
+        super().save(*args, **kwargs)
     #Kullanıcının çıktısı
     def __str__(self):
-        return self.name
+        return self.email
     
 class Recruitment(models.Model):
     job_title = models.CharField(max_length=100)

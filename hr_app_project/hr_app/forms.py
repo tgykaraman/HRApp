@@ -2,14 +2,16 @@ from typing import Any
 from django.forms import ModelForm, ChoiceField
 from hr_app.models import Employee, Candidate, Recruitment, Salary
 from django import forms
+from django.contrib.auth.models import User
 
 class AddNewEmployee(ModelForm):
+    username = forms.CharField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput)
     password_confirm = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = Employee
-        fields = ["name", "email", "password", "phone", "address", "position", "contract_type", 
+        fields = ["username","name", "email", "password", "phone", "address", "position", "contract_type", 
                   "hire_date", "salary", "department", "education", "birthdate", "photo", "password_confirm","absence"]
     def clean(self):
         cleaned_data = super().clean()
@@ -20,6 +22,19 @@ class AddNewEmployee(ModelForm):
             raise forms.ValidationError("Passwords do not match")
         
         return cleaned_data
+    
+    def save(self, commit=True):
+        user = User.objects.create_user(
+            username=self.cleaned_data['username'],
+            password=self.cleaned_data['password'],
+            email=self.cleaned_data['email']
+        )   
+        employee = super().save(commit=False)
+        employee.user = user
+        if commit:
+            employee.save()
+        return employee
+    
 
 class AddNewJob(ModelForm):
     class Meta:
