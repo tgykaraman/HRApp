@@ -1,6 +1,6 @@
 from typing import Any
 from django.forms import ModelForm, ChoiceField
-from hr_app.models import Employee, Candidate, Recruitment, Salary
+from hr_app.models import Employee, Candidate, Recruitment, Salary, LeaveRequest
 from django import forms
 from django.contrib.auth.models import User
 
@@ -67,6 +67,21 @@ class EmployeeForm(ModelForm):
     class Meta:
         model = Employee
         fields = ["salary"]
+
+
+class LeaveRequestFormEmployee(ModelForm):
+    class Meta:
+        model = LeaveRequest
+        fields = ["start_date", "end_date", "reason"]
+
+class LeaveRequestFormAdmin(ModelForm):
+    status = forms.ChoiceField(choices=LeaveRequest.STATUS_CHOICES)
+
+    class Meta:
+        model = LeaveRequest
+        fields = ["start_date", "end_date", "reason","status"]
+
+
 
 
     

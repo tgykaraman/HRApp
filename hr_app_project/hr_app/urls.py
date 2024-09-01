@@ -40,6 +40,14 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', views.login_employee, name='login'),
     path('payrollemployee/', views.payrollemployee, name="payrollemployee"),
+    path('add_leave_request/', views.add_leave_request, name="add_leave_request"),
+    path('timeoffemployee/', views.timeoffemployee, name="timeoffemployee"),
+    path('add_timeoff/<int:id>', views.add_timeoff, name="add_timeoff"),
+    path('timeoffadmin', views.timeoffadmin, name="timeoffadmin"),
+    path('edit_timeoff/<int:employee_id>/<int:leave_id>', views.edit_timeoff, name="edit_timeoff"),
+    path('delete_timeoff/<int:id>', views.delete_timeoff, name="delete_timeoff"),
+    path('timeofffilter', views.timeofffilter, name="timeofffilter"),
+    path('export_timeoff_to_excel', views.export_timeoff_to_excel, name="export_timeoff_to_excel"),
 ]
 
 if settings.DEBUG:

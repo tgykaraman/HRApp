@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .forms import AddNewEmployee, AddNewJob, AddNewCandidate, SalaryForm, EmployeeForm
+from .forms import AddNewEmployee, AddNewJob, AddNewCandidate, SalaryForm, EmployeeForm, LeaveRequestFormEmployee, LeaveRequestFormAdmin
 from django.urls import reverse 
-from .models import Employee, Recruitment, Candidate, Salary, Events
+from .models import Employee, Recruitment, Candidate, Salary, Events, LeaveRequest
 from django.contrib import messages
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
@@ -353,8 +353,92 @@ def payrollemployee(request):
     salaries = Salary.objects.filter(employee=employee.id)
     return render(request,"payrollemployee.html",{"employee":employee, "salaries":salaries})
 
+def add_leave_request(request):
+    employee = get_object_or_404(Employee,email=request.user.email)
+    if request.method == "POST":
+        leave_request_form = LeaveRequestFormEmployee(request.POST)
+        if leave_request_form.is_valid():
+            leave_request = leave_request_form.save(commit=False)
+            leave_request.employee = employee
+            leave_request.save()
+            print(leave_request_form.errors)
+            return redirect("hr_app:timeoffemployee")
+    else:
+         leave_request_form = LeaveRequestFormEmployee()
+    context = {
+        "leave_request_form": leave_request_form,
+        "employee":employee
+    }
+    print(leave_request_form.errors)
+    return render(request,"leaveformemployee.html",context)  
+
+def timeoffemployee(request):
+    employee = Employee.objects.get(email=request.user.email)
+    leave_requests = LeaveRequest.objects.filter(employee=employee.id)
+    return render(request,"timeoffemployee.html",{"employee":employee, "leave_requests":leave_requests})
+
+def add_timeoff(request,id):
+    employee = get_object_or_404(Employee,id=id)
+    if request.method == "POST":
+        leave_form = LeaveRequestFormAdmin(request.POST)
+        if leave_form.is_valid():
+            leave_form = leave_form.save(commit=False)
+            leave_form.employee = employee
+            leave_form.save()
+            return redirect("hr_app:timeoffadmin")
+    else:
+        leave_form = LeaveRequestFormAdmin()
+    context = {
+        "leave_form": leave_form
+    }
+    return render(request,"leaveformadmin.html",context)
+
+def timeoffadmin(request):
+    employees = Employee.objects.all()
+    leave_requests = LeaveRequest.objects.all()
+    return render(request,"timeoffadmin.html",{"employees":employees, "leave_requests":leave_requests})
+
+def edit_timeoff(request,employee_id, leave_id):
+    employee = get_object_or_404(Employee,id=employee_id)
+    leave = get_object_or_404(LeaveRequest,id=leave_id)
+    if request.method == "POST":
+        leave_form = LeaveRequestFormAdmin(request.POST, instance=leave)
+        if leave_form.is_valid():
+            leave = leave_form.save(commit=False)
+            leave.employee = employee
+            leave.save()
+            return redirect("hr_app:timeoffadmin")
+    else:
+        leave_form = LeaveRequestFormAdmin(instance=leave)
+    context = {
+        "leave_form": leave_form
+    }
+    return render(request,"edittimeoff.html",context)
+
+
+def delete_timeoff(request,id):
+    leave = LeaveRequest.objects.get(pk=id)
+    LeaveRequest.objects.filter(id=id).delete()
+    return redirect("hr_app:timeoffadmin")
+
+def timeofffilter(request):
+    employees = Employee.objects.all()
+    leaves = LeaveRequest.objects.all()
+    name_filter = request.GET.get("name")
+
+    if name_filter:
+        employees = employees.filter(name__icontains=name_filter).all()
     
+    context = {"employees":employees,
+               "leaves":leaves,
+               "name_filter": name_filter}
+    print(f"{name_filter}")
+    return render(request,"timeoffadmin.html",context=context)
 
-
-
-
+def export_timeoff_to_excel(request):
+    leaves = LeaveRequest.objects.all().values()
+    df = pd.DataFrame(leaves)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=timeoff.xlsx'
+    df.to_excel(response, index=False)
+    return response

@@ -1,5 +1,5 @@
-{% load static %}
 
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -51,35 +51,61 @@
           </ul>
         </div>
     </div>
-      
 
-      <div class="container fixed-top " style="max-height: 80vh; overflow-y: auto; margin-left: 20%; margin-top: 4%; width: auto;">
+<div class="container fixed-top label" style="margin-left: 25%; margin-top: 6%; max-height: 80vh; overflow-y: auto; color: azure;">
+<form method="post" enctype="multipart/form-data" action="" id="myForm">
+    {% csrf_token %}
+    
+    <!-- Add Salary -->
+    <fieldset>
+        <legend><h2>Reuqest Time-Off</h2></legend>
+        <hr>
+        {{ leave_request_form.reason.errors }}
+        <label for="{{ leave_request_form.reason.id_for_label }}" style="font-weight: bold;font-size:18px;">Reason:</label>
+        <br>
+        {{ leave_request_form.reason}}
+        <br><br>
+        {{ leave_request_form.start_date.errors }}
+        <label for="{{ leave_request_form.start_date.id_for_label }}">Start Date:</label>
+        <br>
+        {{ leave_request_form.start_date }}
+        <br><br>
+        {{ leave_request_form.end_date.errors }}
+        <label for="{{ leave_request_form.end_date.id_for_label }}">End Date:</label>
+        <br>
+        {{ leave_request_form.end_date }}
+    </fieldset>
+    <br><br>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+    Submit
+   </button>
+   <br><br>
+   </form>
+</div>
 
-        <nav class=" nav nav-pills navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="color: azure;
-        padding: 10px;">
-            <a href="{% url 'hr_app:homeemployee' %}" class="nav-link active" aria-current="page"> General Info </a>
-            <a href="{% url 'hr_app:timeoffemployee' %}" class="nav-link"> Request Time-Off</a>  
-          </nav>
-        
-          <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" style="padding: 10px; color: azure;">
-            <h1 style="margin-right: 63%;"> Welcome {{employee.name}} </h1>
-          </nav>
-        
-          <div class="container" style="margin-top: 10px; overflow-y: auto;">       
-                <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title"> {{employee.name}} </h5>
-                      <h6 class="card-subtitle mb-2 text-body-secondary">Position: {{employee.position}} </h6>
-                      <hr>
-                      <p class="card-text"> <b>Email:</b> {{employee.email}}</p>
-                      <p class="card-text"> <b>Department:</b> {{employee.department}}</p>
-                      <p class="card-text"> <b>Contract Type:</b> {{employee.contract_type}}</p>
-                      <p class="card-text"> <b>Salary:</b> {{employee.salary}}</p>
-                      <p class="card-text"> <b>Adress:</b> <br> {{employee.address}}</p>
-                      <hr>
-                    </div>
-                  </div>
-          </div>
-        </div>
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirm Edit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to send that request?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" id="confirmSubmit">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('confirmSubmit').addEventListener('click', function() {
+    document.getElementById('myForm').submit(); // Formu gönder
+  });
+</script>   
 </body>
 </html>

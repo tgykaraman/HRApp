@@ -29,10 +29,10 @@ class Employee(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.password = make_password(self.password)
-        today = date.today()
-        employment_duration = today - self.hire_date
-        if employment_duration.days >= 365:
-            self.absence = 14.0
+            today = date.today()
+            employment_duration = today - self.hire_date
+            if employment_duration.days >= 365:
+                self.absence = 14.0
         super().save(*args, **kwargs)
     #Kullanıcının çıktısı
     def __str__(self):
@@ -106,6 +106,30 @@ class Events(models.Model):
  
     class Meta:  
         db_table = "tblevents"
+
+class LeaveRequest(models.Model):
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Approved", "Approved"),
+        ("Rejected","Rejected")
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="leave_request")
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.CharField(max_length=100)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES,default="Pending",null=True)
+
+    def save(self,*args, **kwargs):
+        if self.status == "Approved":
+            days_requested = (self.end_date - self.start_date).days+1
+            self.employee.absence  -= days_requested
+            if self.employee.absence < -7:
+                raise ValueError("Yeterli izin gününüz yok.")
+            self.employee.save()
+        super().save(*args, **kwargs)
+            
+
 
 
     

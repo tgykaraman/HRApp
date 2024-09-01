@@ -9,22 +9,27 @@
     
     <!-- Add Salary -->
     <fieldset>
-        <legend><h2>Add Payroll</h2></legend>
+        <legend><h2>Reuqest Time-Off</h2></legend>
         <hr>
-        {{ employee_form.salary.errors}}
-        <label for="{{ employee_form.salary.id_for_label }}" style="font-weight: bold;font-size:18px;">Salary:</label>
+        {{ leave_form.reason.errors }}
+        <label for="{{ leave_form.reason.id_for_label }}" style="font-weight: bold;font-size:18px;">Reason:</label>
         <br><br>
-        {{ employee_form.salary}}
+        {{ leave_form.reason}}
         <br><br>
-        {{ salary_form.month.errors }}
-        <label for="{{ salary_form.month.id_for_label }}">Month:</label>
+        {{ leave_form.start_date.errors }}
+        <label for="{{ leave_form.start_date.id_for_label }}">Start Date:</label>
         <br>
-        {{ salary_form.month }}
+        {{ leave_form.start_date }}
         <br><br>
-        {{ salary_form.status.errors }}
-        <label for="{{ salary_form.status.id_for_label }}">Status:</label>
+        {{ leave_form.end_date.errors }}
+        <label for="{{ leave_form.end_date.id_for_label }}">End Date:</label>
         <br>
-        {{ salary_form.status }}
+        {{ leave_form.end_date }}
+        <br><br>
+        {{ leave_form.status.errors }}
+        <label for="{{ leave_form.status.id_for_label }}">Status:</label>
+        <br>
+        {{ leave_form.status }}
     </fieldset>
     <br><br>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
@@ -43,7 +48,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Are you sure you want to add that payroll?
+        Are you sure you want to add that timeoff?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
