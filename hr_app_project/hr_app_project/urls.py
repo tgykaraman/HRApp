@@ -25,6 +25,7 @@ urlpatterns = [
     path("hr_app/",include("hr_app.urls")),
     path("",include("django.contrib.auth.urls")),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('', auth_views.LoginView.as_view(), name='login'),
 ]
 
 if settings.DEBUG:

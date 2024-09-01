@@ -7,14 +7,16 @@ import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required(login_url="/login")
 def manageemployee(request):
     employees = Employee.objects.all()
     return render(request,"manageemployee.html",{"employees":employees})
 
-
+@login_required(login_url="/login")
 def AddEmployee(request):
     if request.method == 'POST':
         form = AddNewEmployee(request.POST, request.FILES)
@@ -32,7 +34,7 @@ def AddEmployee(request):
     employees = Employee.objects.all()
     return render(request, "newemployee.html", {"form": form, "employees": employees})
 
-
+@login_required(login_url="/login")
 def edit_employee(request,id):
     employee = get_object_or_404(Employee,id=id)
     if request.method == "POST":
@@ -48,6 +50,7 @@ def edit_employee(request,id):
        form = AddNewEmployee(instance=employee)
     return render(request,"editemployee.html",{"form":form})
 
+@login_required(login_url="/login")
 def export_employees_to_excel(request):
     employees = Employee.objects.all().values()
     df = pd.DataFrame(employees)
@@ -56,11 +59,13 @@ def export_employees_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
+@login_required(login_url="/login")
 def deleteemployee(request,id):
     employee = Employee.objects.get(pk=id)
     Employee.objects.filter(id=id).delete()
     return redirect("hr_app:manageemployee")
 
+@login_required(login_url="/login")
 def tablefilter(request):
     employees = Employee.objects.all()
     name_filter = request.GET.get("name")
@@ -77,6 +82,7 @@ def tablefilter(request):
     print(f"{name_filter} & {department_filter}")
     return render(request,"manageemployee.html",context=context)
 
+@login_required(login_url="/login")
 def AddJob(request):
     if request.method == 'POST':
         form = AddNewJob(request.POST)
@@ -94,6 +100,7 @@ def AddJob(request):
     jobs = Recruitment.objects.all()
     return render(request, "newjob.html", {"form": form, "jobs": jobs})
 
+@login_required(login_url="/login")
 def AddCandidate(request):
     if request.method == 'POST':
         form= AddNewCandidate(request.POST, request.FILES)
@@ -111,10 +118,12 @@ def AddCandidate(request):
     candidates = Candidate.objects.all()
     return render(request, "newcandidate.html", {"form": form, "candidates": candidates})
 
+@login_required(login_url="/login")
 def jobview(request):
     jobs = Recruitment.objects.all()
     return render(request,"jobs.html",{"jobs":jobs})
 
+@login_required(login_url="/login")
 def candidateview(request):
     candidates_by_status = {
         'Sourced': Candidate.objects.filter(status='Sourced'),
@@ -128,11 +137,13 @@ def candidateview(request):
     }
     return render(request,"candidates.html",context=context)
 
+@login_required(login_url="/login")
 def jobdetails(request,id):
     job = Recruitment.objects.get(id=id)
     requirements = [req.strip() for req in job.requirements.split(',')]
     return render(request,"jobdetails.html",{"job":job, "requirements":requirements})
 
+@login_required(login_url="/login")
 def edit_job(request,id):
     job = get_object_or_404(Recruitment,id=id)
     if request.method == "POST":
@@ -148,11 +159,13 @@ def edit_job(request,id):
        form = AddNewJob(instance=job)
     return render(request,"editjob.html",{"form":form})
 
+@login_required(login_url="/login")
 def deletejob(request,id):
     job = Recruitment.objects.get(pk=id)
     Recruitment.objects.filter(id=id).delete()
     return redirect("hr_app:jobs")
 
+@login_required(login_url="/login")
 def edit_candidate(request,id):
     candidate = get_object_or_404(Candidate,id=id)
     if request.method == "POST":
@@ -167,11 +180,13 @@ def edit_candidate(request,id):
        form = AddNewCandidate(instance=candidate)
     return render(request,"editcandidate.html",{"form":form})
 
+@login_required(login_url="/login")
 def deletecandidate(request,id):
     candidate = Candidate.objects.get(pk=id)
     Candidate.objects.filter(id=id).delete()
     return redirect("hr_app:candidates")
 
+@login_required(login_url="/login")
 def jobfilter(request):
     jobs = Recruitment.objects.all()
     name_filter = request.GET.get("job_title")
@@ -188,6 +203,7 @@ def jobfilter(request):
     print(f"{name_filter} & {department_filter}")
     return render(request,"jobs.html",context=context)
 
+@login_required(login_url="/login")
 def export_jobs_to_excel(request):
     jobs = Recruitment.objects.all().values()
     df = pd.DataFrame(jobs)
@@ -196,6 +212,7 @@ def export_jobs_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
+@login_required(login_url="/login")
 def export_candidates_to_excel(request):
     candidates = Candidate.objects.all().values()
     df = pd.DataFrame(candidates)
@@ -204,6 +221,7 @@ def export_candidates_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
+@login_required(login_url="/login")
 def add_salary(request,id):
     employee = get_object_or_404(Employee,id=id)
     if request.method == "POST":
@@ -224,11 +242,13 @@ def add_salary(request,id):
     }
     return render(request,"updatesalary.html",context)
 
+@login_required(login_url="/login")
 def payrollview(request):
     employees = Employee.objects.all()
     salaries = Salary.objects.all()
     return render(request,"payroll.html",{"employees":employees, "salaries":salaries})
 
+@login_required(login_url="/login")
 def update_salary(request,employee_id, salary_id):
     employee = get_object_or_404(Employee,id=employee_id)
     salary = get_object_or_404(Salary,id=salary_id)
@@ -250,11 +270,13 @@ def update_salary(request,employee_id, salary_id):
     }
     return render(request,"editsalary.html",context)
 
+@login_required(login_url="/login")
 def delete_salary(request,id):
     salary = Salary.objects.get(pk=id)
     Salary.objects.filter(id=id).delete()
     return redirect("hr_app:payrollview")  
 
+@login_required(login_url="/login")
 def payrollfilter(request):
     employees = Employee.objects.all()
     salaries = Salary.objects.all()
@@ -269,6 +291,7 @@ def payrollfilter(request):
     print(f"{name_filter}")
     return render(request,"payroll.html",context=context)
 
+@login_required(login_url="/login")
 def export_payroll_to_excel(request):
     salaries = Salary.objects.all().values()
     df = pd.DataFrame(salaries)
@@ -277,6 +300,7 @@ def export_payroll_to_excel(request):
     df.to_excel(response, index=False)
     return response
 
+@login_required(login_url="/login")
 def schedule(request):  
     all_events = Events.objects.all()
     context = {
@@ -284,6 +308,7 @@ def schedule(request):
     }
     return render(request,'schedule.html',context)
 
+@login_required(login_url="/login")
 def all_events(request):                                                                                                 
     all_events = Events.objects.all()                                                                                    
     out = []                                                                                                             
@@ -296,6 +321,7 @@ def all_events(request):
         })
     return JsonResponse(out, safe=False) 
 
+@login_required(login_url="/login")
 def add_event(request):
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
@@ -305,6 +331,7 @@ def add_event(request):
     data = {}
     return JsonResponse(data)
 
+@login_required(login_url="/login")
 def update(request):
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
@@ -318,6 +345,7 @@ def update(request):
     data = {}
     return JsonResponse(data)
 
+@login_required(login_url="/login")
 def remove(request):
     id = request.GET.get("id", None)
     event = Events.objects.get(id=id)
@@ -344,15 +372,18 @@ def login_employee(request):
             return render(request, 'registration/login.html', {'error': 'User does not exist'})
     return render(request, 'registration/login.html')
 
+@login_required(login_url="/login")
 def homeemployee(request):
     employee = Employee.objects.get(email=request.user.email)
     return render(request,"homeemployee.html",{"employee":employee})
 
+@login_required(login_url="/login")
 def payrollemployee(request):
     employee = Employee.objects.get(email=request.user.email)
     salaries = Salary.objects.filter(employee=employee.id)
     return render(request,"payrollemployee.html",{"employee":employee, "salaries":salaries})
 
+@login_required(login_url="/login")
 def add_leave_request(request):
     employee = get_object_or_404(Employee,email=request.user.email)
     if request.method == "POST":
@@ -372,11 +403,13 @@ def add_leave_request(request):
     print(leave_request_form.errors)
     return render(request,"leaveformemployee.html",context)  
 
+@login_required(login_url="/login")
 def timeoffemployee(request):
     employee = Employee.objects.get(email=request.user.email)
     leave_requests = LeaveRequest.objects.filter(employee=employee.id)
     return render(request,"timeoffemployee.html",{"employee":employee, "leave_requests":leave_requests})
 
+@login_required(login_url="/login")
 def add_timeoff(request,id):
     employee = get_object_or_404(Employee,id=id)
     if request.method == "POST":
@@ -393,11 +426,13 @@ def add_timeoff(request,id):
     }
     return render(request,"leaveformadmin.html",context)
 
+@login_required(login_url="/login")
 def timeoffadmin(request):
     employees = Employee.objects.all()
     leave_requests = LeaveRequest.objects.all()
     return render(request,"timeoffadmin.html",{"employees":employees, "leave_requests":leave_requests})
 
+@login_required(login_url="/login")
 def edit_timeoff(request,employee_id, leave_id):
     employee = get_object_or_404(Employee,id=employee_id)
     leave = get_object_or_404(LeaveRequest,id=leave_id)
@@ -415,12 +450,13 @@ def edit_timeoff(request,employee_id, leave_id):
     }
     return render(request,"edittimeoff.html",context)
 
-
+@login_required(login_url="/login")
 def delete_timeoff(request,id):
     leave = LeaveRequest.objects.get(pk=id)
     LeaveRequest.objects.filter(id=id).delete()
     return redirect("hr_app:timeoffadmin")
 
+@login_required(login_url="/login")
 def timeofffilter(request):
     employees = Employee.objects.all()
     leaves = LeaveRequest.objects.all()
@@ -435,6 +471,7 @@ def timeofffilter(request):
     print(f"{name_filter}")
     return render(request,"timeoffadmin.html",context=context)
 
+@login_required(login_url="/login")
 def export_timeoff_to_excel(request):
     leaves = LeaveRequest.objects.all().values()
     df = pd.DataFrame(leaves)

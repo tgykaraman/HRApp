@@ -122,7 +122,7 @@ class LeaveRequest(models.Model):
 
     def save(self,*args, **kwargs):
         if self.status == "Approved":
-            days_requested = (self.end_date - self.start_date).days+1
+            days_requested = (self.end_date - self.start_date).days
             self.employee.absence  -= days_requested
             if self.employee.absence < -7:
                 raise ValueError("Yeterli izin gününüz yok.")
